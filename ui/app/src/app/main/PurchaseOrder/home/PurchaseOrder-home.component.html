@@ -1,0 +1,53 @@
+<o-form-layout-manager attr="PurchaseOrder" mode="tab" title="PURCHASEORDER">
+    <div fxFill fxLayout="column" fxLayoutAlign="start">
+        <o-table 
+            attr="PurchaseOrderTable" 
+            service="PurchaseOrder" 
+            entity="PurchaseOrder" 
+            title="PURCHASEORDER"
+            keys="id"
+            columns="id;collection_id;store_id;order_date;total_amount" 
+            header-actions="R;D"
+            visible-columns="id;collection_id;store_id;order_date;total_amount"  
+            sort-columns="id" 
+            query-rows="20" 
+            quick-filter="yes"
+            row-height="medium" 
+            select-all-checkbox="true" 
+            pageable="yes"  
+            auto-adjust="true" 
+            virtual-scroll="yes" 
+            edition-mode="dblclick"
+            horizontal-scroll="yes"
+            show-title="yes"
+            export-button="yes">
+            
+            <o-table-column #id attr="id" title=" id*" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+            
+            <o-table-column attr="collection_id" title="collection_id">
+    <o-table-cell-renderer-service attr="collection_id" 
+        service="Collection" entity="CollectionType" columns="id;name"
+        parent-keys="id:collection_id"
+        value-column="name" keys="collection_id"
+        visible-columns="name" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+            
+            <o-table-column attr="store_id" title="store_id">
+    <o-table-cell-renderer-service attr="store_id" 
+        service="Store" entity="StoreType" columns="id;name"
+        parent-keys="id:store_id"
+        value-column="name" keys="store_id"
+        visible-columns="name" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+            
+            <o-date-input #order_date attr="order_date" type="timestamp" label="order_date" editable="no" required="yes" format="LL" fxFlex="20%" class="form-field"></o-date-input>
+            
+            <o-table-column #total_amount attr="total_amount" title="total_amount" type="currency" editable="no" required="no" currency-symbol="$" currency-symbol-position="left" thousand-separator=","decimal-separator="."></o-table-column>
+            
+            <o-table-context-menu></o-table-context-menu>
+            <o-table-paginator page-size-options="24;48;96"></o-table-paginator>
+        </o-table>
+    </div>
+</o-form-layout-manager>

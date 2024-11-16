@@ -1,0 +1,82 @@
+<div class="container">
+<o-form-container breadcrumb="yes" breadcrumb-label-columns="id" breadcrumb-separator=", " class="fill-form">
+      <o-form #form attr="Gallery_form_edit" 
+        service="Gallery" 
+        entity="Gallery" 
+        fxLayout="column" 
+        show-header="yes" 
+        header-actions="R;I;U;D"
+        #oDetailForm keys="id" 
+        keys-sql-types="INTEGER" 
+        show-header-navigation="yes"
+        (onDataLoaded)="onDataLoaded($event)">
+
+  <o-row attr="row1" layout-align="start stretch">
+    <div fxLayout="row wrap" fxLayoutAlign="start start" fxFlex fxLayoutGap="14px">
+      
+      <o-integer-input #id attr="id" label=" id*" type="integer" editable="no" required="no" ></o-integer-input>
+      
+      <o-text-input #location attr="location" label="location" enabled="yes" required="yes" fxFlex="20%" class="form-field"></o-text-input>
+      
+      <o-integer-input #capacity attr="capacity" label="capacity" type="integer" editable="no" required="no" ></o-integer-input>
+      
+      <o-date-input #established_date attr="established_date" type="timestamp" label="established_date" editable="no" required="yes" format="LL" fxFlex="20%" class="form-field"></o-date-input>
+      
+    </div>
+  </o-row>
+      
+      <mat-tab-group fxFill>
+        
+        <mat-tab label="EVENT-gallery_id">
+    <div layout-padding>
+      <o-table 
+        attr="EventTable" 
+        service="Event" 
+        entity="Event" 
+        keys="id"
+        parent-keys="gallery_id:id"
+        columns="name;gallery_id;event_date;id"  
+        horizontal-scroll="yes"
+        detail-form-route="Event" 
+        edit-form-route="Event"
+        visible-columns="name;gallery_id;event_date;id"  
+        sort-columns="name" 
+        query-rows="25" 
+        quick-filter="yes"
+        row-height="medium" 
+        select-all-checkbox="true" 
+        pageable="yes"  
+        auto-adjust="true" 
+        virtual-scroll="yes" 
+        insert-button="yes" 
+        delete-button="yes" 
+        fixed-header="true" 
+        class="vertical-padding-8"
+        edition-mode="dblclick" 
+        horizontal-scroll="yes" class="fill-form">
+        
+          <o-table-column #name attr="name" title=" name*" editable="no" required="yes" content-align="left"></o-table-column>
+        
+          <o-table-column attr="gallery_id" title="gallery_id">
+    <o-table-cell-renderer-service attr="gallery_id" 
+        service="Gallery" entity="GalleryType" columns="id;id"
+        parent-keys="id:gallery_id"
+        value-column="id" keys="gallery_id"
+        visible-columns="id" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+        
+          <o-date-input #event_date attr="event_date" type="timestamp" label="event_date" editable="no" required="yes" format="LL" fxFlex="20%" class="form-field"></o-date-input>
+        
+          <o-table-column #id attr="id" title="id" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+        
+        <o-table-paginator page-size-options="25;50;100"></o-table-paginator>
+      </o-table>
+    </div>
+</mat-tab>
+        
+      </mat-tab-group>
+      
+    </o-form>
+  </o-form-container>
+</div>

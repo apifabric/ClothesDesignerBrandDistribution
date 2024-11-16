@@ -1,0 +1,516 @@
+about:
+  date: November 16, 2024 19:32:05
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+entities:
+  Brand:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: country
+      required: true
+      template: text
+      type: VARCHAR
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Represents a designer brand providing clothing lines.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    hidden: {}
+    home_template: home_template.html
+    info_list: Represents a designer brand providing clothing lines.
+    label: Brand
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - brand_id
+      name: BrandDesignerList
+      resource: BrandDesigner
+    - direction: tomany
+      fks:
+      - brand_id
+      name: CollectionList
+      resource: Collection
+    - direction: tomany
+      fks:
+      - brand_id
+      name: SupplyOrderList
+      resource: SupplyOrder
+    type: Brand
+  BrandDesigner:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: brand_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: designer_id
+      required: true
+      template: integer
+      type: INTEGER
+    description: Association between brands and designers.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Association between brands and designers.
+    label: BrandDesigner
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - brand_id
+      name: brand
+      resource: Brand
+    - direction: toone
+      fks:
+      - designer_id
+      name: designer
+      resource: Designer
+    type: BrandDesigner
+  Collection:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: brand_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: season
+      required: true
+      template: text
+      type: VARCHAR
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Represents a collection of clothing items under a brand.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    hidden: {}
+    home_template: home_template.html
+    info_list: Represents a collection of clothing items under a brand.
+    label: Collection
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - collection_id
+      name: ItemList
+      resource: Item
+    - direction: tomany
+      fks:
+      - collection_id
+      name: PurchaseOrderList
+      resource: PurchaseOrder
+    - direction: toone
+      fks:
+      - brand_id
+      name: brand
+      resource: Brand
+    type: Collection
+  Designer:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: speciality
+      template: text
+      type: VARCHAR
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Represents individual designers who create styles.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    hidden: {}
+    home_template: home_template.html
+    info_list: Represents individual designers who create styles.
+    label: Designer
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - designer_id
+      name: BrandDesignerList
+      resource: BrandDesigner
+    type: Designer
+  Event:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: gallery_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: event_date
+      required: true
+      type: DATETIME
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Brand events showcasing collections.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    hidden: {}
+    home_template: home_template.html
+    info_list: Brand events showcasing collections.
+    label: Event
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - gallery_id
+      name: gallery
+      resource: Gallery
+    type: Event
+  Gallery:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: location
+      required: true
+      template: text
+      type: VARCHAR
+    - name: capacity
+      template: integer
+      type: INTEGER
+    - name: established_date
+      required: true
+      type: DATETIME
+    description: Location where collections are showcased.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Location where collections are showcased.
+    label: Gallery
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - gallery_id
+      name: EventList
+      resource: Event
+    type: Gallery
+  Item:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: collection_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: item_type
+      required: true
+      template: text
+      type: VARCHAR
+    - name: price
+      template: integer
+      type: INTEGER
+    - name: release_date
+      required: true
+      type: DATETIME
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Represents individual clothing items within a collection.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    hidden: {}
+    home_template: home_template.html
+    info_list: Represents individual clothing items within a collection.
+    label: Item
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - collection_id
+      name: collection
+      resource: Collection
+    type: Item
+  PurchaseOrder:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: collection_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: store_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: order_date
+      required: true
+      type: DATETIME
+    - name: total_amount
+      template: integer
+      type: INTEGER
+    description: Orders placed by stores for collection items.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Orders placed by stores for collection items.
+    label: PurchaseOrder
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - collection_id
+      name: collection
+      resource: Collection
+    - direction: toone
+      fks:
+      - store_id
+      name: store
+      resource: Store
+    type: PurchaseOrder
+  Store:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: location
+      required: true
+      template: text
+      type: VARCHAR
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Retail stores selling collections.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    hidden: {}
+    home_template: home_template.html
+    info_list: Retail stores selling collections.
+    label: Store
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - store_id
+      name: PurchaseOrderList
+      resource: PurchaseOrder
+    type: Store
+  Supplier:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: material_type
+      required: true
+      template: text
+      type: VARCHAR
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Supply chain partners providing materials.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    hidden: {}
+    home_template: home_template.html
+    info_list: Supply chain partners providing materials.
+    label: Supplier
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - supplier_id
+      name: SupplyOrderList
+      resource: SupplyOrder
+    type: Supplier
+  SupplyOrder:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: brand_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: supplier_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: order_date
+      required: true
+      type: DATETIME
+    - name: total_cost
+      template: integer
+      type: INTEGER
+    description: Orders placed by brands to suppliers.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Orders placed by brands to suppliers.
+    label: SupplyOrder
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - brand_id
+      name: brand
+      resource: Brand
+    - direction: toone
+      fks:
+      - supplier_id
+      name: supplier
+      resource: Supplier
+    type: SupplyOrder
+  Warehouse:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: location
+      required: true
+      template: text
+      type: VARCHAR
+    - name: max_capacity
+      template: integer
+      type: INTEGER
+    - name: temperature_control
+      type: Boolean
+    description: Warehouse for storing collections and items.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Warehouse for storing collections and items.
+    label: Warehouse
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    type: Warehouse
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: false
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    mode: tab
+    pick_style: list
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: false

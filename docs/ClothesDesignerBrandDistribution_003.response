@@ -1,0 +1,92 @@
+{
+    "models": [
+        {
+            "classname": "Brand",
+            "code": "class Brand(Base):\n    \"\"\"description: Represents a designer brand providing clothing lines.\"\"\"\n\n    __tablename__ = 'brands'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    country = Column(String, nullable=False)",
+            "description": "Represents a designer brand providing clothing lines.",
+            "name": "Brand"
+        },
+        {
+            "classname": "Designer",
+            "code": "class Designer(Base):\n    \"\"\"description: Represents individual designers who create styles.\"\"\"\n\n    __tablename__ = 'designers'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    speciality = Column(String)",
+            "description": "Represents individual designers who create styles.",
+            "name": "Designer"
+        },
+        {
+            "classname": "Collection",
+            "code": "class Collection(Base):\n    \"\"\"description: Represents a collection of clothing items under a brand.\"\"\"\n\n    __tablename__ = 'collections'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    season = Column(String, nullable=False)\n    brand_id = Column(Integer, ForeignKey('brands.id'), nullable=False)",
+            "description": "Represents a collection of clothing items under a brand.",
+            "name": "Collection"
+        },
+        {
+            "classname": "Gallery",
+            "code": "class Gallery(Base):\n    \"\"\"description: Location where collections are showcased.\"\"\"\n\n    __tablename__ = 'galleries'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    location = Column(String, nullable=False)\n    capacity = Column(Integer)\n    established_date = Column(DateTime, nullable=False)",
+            "description": "Location where collections are showcased.",
+            "name": "Gallery"
+        },
+        {
+            "classname": "Item",
+            "code": "class Item(Base):\n    \"\"\"description: Represents individual clothing items within a collection.\"\"\"\n\n    __tablename__ = 'items'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    item_type = Column(String, nullable=False)\n    price = Column(Integer)\n    release_date = Column(DateTime, nullable=False)\n    collection_id = Column(Integer, ForeignKey('collections.id'), nullable=False)",
+            "description": "Represents individual clothing items within a collection.",
+            "name": "Item"
+        },
+        {
+            "classname": "Store",
+            "code": "class Store(Base):\n    \"\"\"description: Retail stores selling collections.\"\"\"\n\n    __tablename__ = 'stores'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    location = Column(String, nullable=False)",
+            "description": "Retail stores selling collections.",
+            "name": "Store"
+        },
+        {
+            "classname": "Supplier",
+            "code": "class Supplier(Base):\n    \"\"\"description: Supply chain partners providing materials.\"\"\"\n\n    __tablename__ = 'suppliers'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    material_type = Column(String, nullable=False)",
+            "description": "Supply chain partners providing materials.",
+            "name": "Supplier"
+        },
+        {
+            "classname": "BrandDesigner",
+            "code": "class BrandDesigner(Base):\n    \"\"\"description: Association between brands and designers.\"\"\"\n\n    __tablename__ = 'brand_designers'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    brand_id = Column(Integer, ForeignKey('brands.id'), nullable=False)\n    designer_id = Column(Integer, ForeignKey('designers.id'), nullable=False)",
+            "description": "Association between brands and designers.",
+            "name": "BrandDesigner"
+        },
+        {
+            "classname": "Warehouse",
+            "code": "class Warehouse(Base):\n    \"\"\"description: Warehouse for storing collections and items.\"\"\"\n\n    __tablename__ = 'warehouses'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    location = Column(String, nullable=False)\n    max_capacity = Column(Integer)\n    temperature_control = Column(Boolean)",
+            "description": "Warehouse for storing collections and items.",
+            "name": "Warehouse"
+        },
+        {
+            "classname": "Event",
+            "code": "class Event(Base):\n    \"\"\"description: Brand events showcasing collections.\"\"\"\n\n    __tablename__ = 'events'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    event_date = Column(DateTime, nullable=False)\n    gallery_id = Column(Integer, ForeignKey('galleries.id'), nullable=False)",
+            "description": "Brand events showcasing collections.",
+            "name": "Event"
+        },
+        {
+            "classname": "PurchaseOrder",
+            "code": "class PurchaseOrder(Base):\n    \"\"\"description: Orders placed by stores for collection items.\"\"\"\n\n    __tablename__ = 'purchase_orders'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    order_date = Column(DateTime, nullable=False)\n    store_id = Column(Integer, ForeignKey('stores.id'), nullable=False)\n    collection_id = Column(Integer, ForeignKey('collections.id'), nullable=False)\n    total_amount = Column(Integer)",
+            "description": "Orders placed by stores for collection items.",
+            "name": "PurchaseOrder"
+        },
+        {
+            "classname": "SupplyOrder",
+            "code": "class SupplyOrder(Base):\n    \"\"\"description: Orders placed by brands to suppliers.\"\"\"\n\n    __tablename__ = 'supply_orders'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    order_date = Column(DateTime, nullable=False)\n    supplier_id = Column(Integer, ForeignKey('suppliers.id'), nullable=False)\n    brand_id = Column(Integer, ForeignKey('brands.id'), nullable=False)\n    total_cost = Column(Integer)",
+            "description": "Orders placed by brands to suppliers.",
+            "name": "SupplyOrder"
+        }
+    ],
+    "rules": [
+        {
+            "name": "Calculate Total Order Amount",
+            "description": "Calculate the total order amount for purchase orders of stores",
+            "use_case": "Compute the total order amounts for purchase orders using the quantity and price of each item.",
+            "code": "Rule.sum(derive=PurchaseOrder.total_amount, as_sum_of=Item.price, child_role_name='items', where=lambda row: row.collection_id == self.collection_id)"
+        },
+        {
+            "name": "Constraint on Gallery Capacity",
+            "description": "Ensure that events in a gallery do not exceed its capacity.",
+            "use_case": "Prevent scheduling events in galleries that exceed the capacity limit.",
+            "code": "Rule.constraint(validate=Gallery, as_condition=lambda gallery: gallery.capacity >= gallery.events.count(), error_msg=\"Events exceeding gallery capacity\")"
+        }
+    ],
+    "test_data": "from datetime import date\n\n# Test data for Brand\nbrand1 = Brand(name='Elegance', country='Italy')\nbrand2 = Brand(name='Urban Chic', country='USA')\nbrand3 = Brand(name='Vintage Virtue', country='France')\nbrand4 = Brand(name='Modern Minimal', country='Japan')\n\n# Test data for Designer\n\n\ndesigner1 = Designer(name='Alex Monroe', speciality='Evening wear')\ndesigner2 = Designer(name='Linda Wells', speciality='Casual streetwear')\ndesigner3 = Designer(name='Hiro Nakamura', speciality='Bohemian Chic')\ndesigner4 = Designer(name='Veronica Chloe', speciality='Accessories')\n\n# Test data for Collection\ncollection1 = Collection(name='Spring Fling', season='Spring', brand_id=1)\ncollection2 = Collection(name='Winter Wonder', season='Winter', brand_id=2)\ncollection3 = Collection(name='Autumn Aura', season='Autumn', brand_id=3)\ncollection4 = Collection(name='Summer Style', season='Summer', brand_id=4)\n\n# Test data for Gallery\ngallery1 = Gallery(location='Milan', capacity=300, established_date=date(2010, 5, 2))\ngallery2 = Gallery(location='New York', capacity=500, established_date=date(2008, 8, 10))\ngallery3 = Gallery(location='Paris', capacity=250, established_date=date(2015, 3, 16))\ngallery4 = Gallery(location='Tokyo', capacity=400, established_date=date(2012, 7, 23))\n\n# Test data for Item\nitem1 = Item(name='Silk Dress', item_type='Dress', price=300, release_date=date(2023, 3, 1), collection_id=1)\nitem2 = Item(name='Wool Coat', item_type='Outerwear', price=550, release_date=date(2022, 11, 20), collection_id=2)\nitem3 = Item(name='Leather Jacket', item_type='Jacket', price=450, release_date=date(2023, 9, 5), collection_id=3)\nitem4 = Item(name='Cotton Shirt', item_type='Shirt', price=100, release_date=date(2022, 7, 11), collection_id=4)\n\n# Test data for Store\nstore1 = Store(name='Chic Essentials', location='Los Angeles')\nstore2 = Store(name='Fashion Hub', location='London')\nstore3 = Store(name='Trendsetters', location='Sydney')\nstore4 = Store(name='Style Corner', location='Berlin')\n\n# Test data for Supplier\nsupplier1 = Supplier(name='Fabric Corp', material_type='Textiles')\nsupplier2 = Supplier(name='Leather Goods Ltd', material_type='Leather')\nsupplier3 = Supplier(name='Button World', material_type='Accessories')\nsupplier4 = Supplier(name='Threadline', material_type='Threads')\n\n# Test data for BrandDesigner\nbrandDesigner1 = BrandDesigner(brand_id=1, designer_id=1)\nbrandDesigner2 = BrandDesigner(brand_id=2, designer_id=2)\nbrandDesigner3 = BrandDesigner(brand_id=3, designer_id=3)\nbrandDesigner4 = BrandDesigner(brand_id=4, designer_id=4)\n\n# Test data for Warehouse\nwarehouse1 = Warehouse(location='Central City', max_capacity=1000, temperature_control=True)\nwarehouse2 = Warehouse(location='West End', max_capacity=1500, temperature_control=False)\nwarehouse3 = Warehouse(location='East Side', max_capacity=800, temperature_control=True)\nwarehouse4 = Warehouse(location='North Point', max_capacity=1200, temperature_control=False)\n\n# Test data for Event\nevent1 = Event(name='Exclusive Spring Show', event_date=date(2023, 3, 15), gallery_id=1)\nevent2 = Event(name='Winter Fashion Week', event_date=date(2022, 12, 5), gallery_id=2)\nevent3 = Event(name='Autumn Exhibition', event_date=date(2023, 9, 20), gallery_id=3)\nevent4 = Event(name='Summer Style Gala', event_date=date(2023, 6, 30), gallery_id=4)\n\n# Test data for PurchaseOrder\norder1 = PurchaseOrder(order_date=date(2023, 4, 10), store_id=1, collection_id=1, total_amount=1000)\norder2 = PurchaseOrder(order_date=date(2023, 1, 20), store_id=2, collection_id=2, total_amount=2000)\norder3 = PurchaseOrder(order_date=date(2023, 7, 15), store_id=3, collection_id=3, total_amount=1500)\norder4 = PurchaseOrder(order_date=date(2023, 8, 25), store_id=4, collection_id=4, total_amount=700)\n\n# Test data for SupplyOrder\nsupply_order1 = SupplyOrder(order_date=date(2023, 1, 5), supplier_id=1, brand_id=1, total_cost=2500)\nsupply_order2 = SupplyOrder(order_date=date(2023, 9, 19), supplier_id=2, brand_id=2, total_cost=3500)\nsupply_order3 = SupplyOrder(order_date=date(2023, 5, 10), supplier_id=3, brand_id=3, total_cost=1500)\nsupply_order4 = SupplyOrder(order_date=date(2023, 11, 22), supplier_id=4, brand_id=4, total_cost=1200)",
+    "name": "ClothesDesignerBrandDistribution"
+}

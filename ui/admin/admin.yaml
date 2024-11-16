@@ -1,0 +1,332 @@
+about:
+  date: November 16, 2024 19:32:05
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+info:
+  number_relationships: 9
+  number_tables: 12
+info_toggle_checked: true
+resources:
+  Brand:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: country
+      required: true
+    - name: id
+    description: Represents a designer brand providing clothing lines.
+    info_list: Represents a designer brand providing clothing lines.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - brand_id
+      name: BrandDesignerList
+      resource: BrandDesigner
+    - direction: tomany
+      fks:
+      - brand_id
+      name: CollectionList
+      resource: Collection
+    - direction: tomany
+      fks:
+      - brand_id
+      name: SupplyOrderList
+      resource: SupplyOrder
+    type: Brand
+    user_key: name
+  BrandDesigner:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: brand_id
+      required: true
+    - name: designer_id
+      required: true
+    description: Association between brands and designers.
+    info_list: Association between brands and designers.
+    tab_groups:
+    - direction: toone
+      fks:
+      - brand_id
+      name: brand
+      resource: Brand
+    - direction: toone
+      fks:
+      - designer_id
+      name: designer
+      resource: Designer
+    type: BrandDesigner
+    user_key: id
+  Collection:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: brand_id
+      required: true
+    - name: season
+      required: true
+    - name: id
+    description: Represents a collection of clothing items under a brand.
+    info_list: Represents a collection of clothing items under a brand.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - collection_id
+      name: ItemList
+      resource: Item
+    - direction: tomany
+      fks:
+      - collection_id
+      name: PurchaseOrderList
+      resource: PurchaseOrder
+    - direction: toone
+      fks:
+      - brand_id
+      name: brand
+      resource: Brand
+    type: Collection
+    user_key: name
+  Designer:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: speciality
+    - name: id
+    description: Represents individual designers who create styles.
+    info_list: Represents individual designers who create styles.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - designer_id
+      name: BrandDesignerList
+      resource: BrandDesigner
+    type: Designer
+    user_key: name
+  Event:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: gallery_id
+      required: true
+    - name: event_date
+      required: true
+      type: DATETIME
+    - name: id
+    description: Brand events showcasing collections.
+    info_list: Brand events showcasing collections.
+    tab_groups:
+    - direction: toone
+      fks:
+      - gallery_id
+      name: gallery
+      resource: Gallery
+    type: Event
+    user_key: name
+  Gallery:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: location
+      required: true
+    - name: capacity
+    - name: established_date
+      required: true
+      type: DATETIME
+    description: Location where collections are showcased.
+    info_list: Location where collections are showcased.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - gallery_id
+      name: EventList
+      resource: Event
+    type: Gallery
+    user_key: id
+  Item:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: collection_id
+      required: true
+    - name: item_type
+      required: true
+    - name: price
+    - name: release_date
+      required: true
+      type: DATETIME
+    - name: id
+    description: Represents individual clothing items within a collection.
+    info_list: Represents individual clothing items within a collection.
+    tab_groups:
+    - direction: toone
+      fks:
+      - collection_id
+      name: collection
+      resource: Collection
+    type: Item
+    user_key: name
+  PurchaseOrder:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: collection_id
+      required: true
+    - name: store_id
+      required: true
+    - name: order_date
+      required: true
+      type: DATETIME
+    - name: total_amount
+    description: Orders placed by stores for collection items.
+    info_list: Orders placed by stores for collection items.
+    tab_groups:
+    - direction: toone
+      fks:
+      - collection_id
+      name: collection
+      resource: Collection
+    - direction: toone
+      fks:
+      - store_id
+      name: store
+      resource: Store
+    type: PurchaseOrder
+    user_key: id
+  Store:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: location
+      required: true
+    - name: id
+    description: Retail stores selling collections.
+    info_list: Retail stores selling collections.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - store_id
+      name: PurchaseOrderList
+      resource: PurchaseOrder
+    type: Store
+    user_key: name
+  Supplier:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: material_type
+      required: true
+    - name: id
+    description: Supply chain partners providing materials.
+    info_list: Supply chain partners providing materials.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - supplier_id
+      name: SupplyOrderList
+      resource: SupplyOrder
+    type: Supplier
+    user_key: name
+  SupplyOrder:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: brand_id
+      required: true
+    - name: supplier_id
+      required: true
+    - name: order_date
+      required: true
+      type: DATETIME
+    - name: total_cost
+    description: Orders placed by brands to suppliers.
+    info_list: Orders placed by brands to suppliers.
+    tab_groups:
+    - direction: toone
+      fks:
+      - brand_id
+      name: brand
+      resource: Brand
+    - direction: toone
+      fks:
+      - supplier_id
+      name: supplier
+      resource: Supplier
+    type: SupplyOrder
+    user_key: id
+  Warehouse:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: location
+      required: true
+    - name: max_capacity
+    - name: temperature_control
+      type: Boolean
+    description: Warehouse for storing collections and items.
+    info_list: Warehouse for storing collections and items.
+    type: Warehouse
+    user_key: id
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    detail_mode: tab
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: 'false'
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    new_mode: dialog
+    pick_style: list
+    row_height: small,
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: 'false'

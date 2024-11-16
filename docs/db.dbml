@@ -1,0 +1,116 @@
+// Copy this text, paste to https://dbdiagram.io/d
+// Or, https://databasediagram.com/app
+// Or, view in VSCode with extension: "DBML Live Preview"
+
+Project DBML {
+  Note: '''
+Brand: Represents a designer brand providing clothing lines.
+BrandDesigner: Association between brands and designers.
+Designer: Represents individual designers who create styles.
+Collection: Represents a collection of clothing items under a brand.
+Event: Brand events showcasing collections.
+Gallery: Location where collections are showcased.
+Item: Represents individual clothing items within a collection.
+PurchaseOrder: Orders placed by stores for collection items.
+Store: Retail stores selling collections.
+Supplier: Supply chain partners providing materials.
+SupplyOrder: Orders placed by brands to suppliers.
+Warehouse: Warehouse for storing collections and items.
+'''
+}
+
+Table Brand {
+    id INTEGER [primary key]
+    name VARCHAR 
+    country VARCHAR 
+    }
+
+Table BrandDesigner {
+    id INTEGER [primary key]
+    brand_id INTEGER 
+    designer_id INTEGER 
+    }
+
+Table Designer {
+    id INTEGER [primary key]
+    name VARCHAR 
+    speciality VARCHAR 
+    }
+
+Table Collection {
+    id INTEGER [primary key]
+    name VARCHAR 
+    season VARCHAR 
+    brand_id INTEGER 
+    }
+
+Table Event {
+    id INTEGER [primary key]
+    name VARCHAR 
+    event_date DATETIME 
+    gallery_id INTEGER 
+    }
+
+Table Gallery {
+    id INTEGER [primary key]
+    location VARCHAR 
+    capacity INTEGER 
+    established_date DATETIME 
+    }
+
+Table Item {
+    id INTEGER [primary key]
+    name VARCHAR 
+    item_type VARCHAR 
+    price INTEGER 
+    release_date DATETIME 
+    collection_id INTEGER 
+    }
+
+Table PurchaseOrder {
+    id INTEGER [primary key]
+    order_date DATETIME 
+    store_id INTEGER 
+    collection_id INTEGER 
+    total_amount INTEGER 
+    }
+
+Table Store {
+    id INTEGER [primary key]
+    name VARCHAR 
+    location VARCHAR 
+    }
+
+Table Supplier {
+    id INTEGER [primary key]
+    name VARCHAR 
+    material_type VARCHAR 
+    }
+
+Table SupplyOrder {
+    id INTEGER [primary key]
+    order_date DATETIME 
+    supplier_id INTEGER 
+    brand_id INTEGER 
+    total_cost INTEGER 
+    }
+
+Table Warehouse {
+    id INTEGER [primary key]
+    location VARCHAR 
+    max_capacity INTEGER 
+    temperature_control BOOLEAN 
+    }
+
+
+
+// Relationships
+    Ref: BrandDesigner.(brand_id) < Brand.(id)
+    Ref: BrandDesigner.(designer_id) < Designer.(id)
+    Ref: Collection.(brand_id) < Brand.(id)
+    Ref: Event.(gallery_id) < Gallery.(id)
+    Ref: Item.(collection_id) < Collection.(id)
+    Ref: PurchaseOrder.(collection_id) < Collection.(id)
+    Ref: PurchaseOrder.(store_id) < Store.(id)
+    Ref: SupplyOrder.(brand_id) < Brand.(id)
+    Ref: SupplyOrder.(supplier_id) < Supplier.(id)
